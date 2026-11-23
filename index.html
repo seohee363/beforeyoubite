@@ -18,10 +18,13 @@
   body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
          padding: 0 16px; background: var(--bg); color: var(--fg); text-align: center;
          font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+  /* 앱 헤더 로고와 같게: 초록→파랑 사각형 + 흰 하트 (lucide Heart) */
   .logo { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 14px;
+          display: flex; align-items: center; justify-content: center;
           background: linear-gradient(135deg, #10b981, #3b82f6); }
+  .logo svg { width: 35px; height: 35px; }
   h1 { margin: 0 0 8px; font-size: 22px; }
-  p { margin: 0 0 20px; color: var(--muted); line-height: 1.5; }
+  p { margin: 0 0 20px; color: var(--muted); line-height: 1.5; word-break: keep-all; }
   .btn { display: inline-block; padding: 12px 22px; border-radius: 10px; background: var(--accent);
          color: #fff; font-weight: 600; text-decoration: none; }
   [hidden] { display: none; }
@@ -29,7 +32,11 @@
 </head>
 <body>
 <main>
-  <div class="logo" aria-hidden="true"></div>
+  <div class="logo" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+    </svg>
+  </div>
   <h1>Before you Bite</h1>
   <p id="msg">앱으로 연결하는 중…</p>
   <a id="go" class="btn" href="./" hidden>앱 열기</a>
@@ -45,10 +52,10 @@
       if (!/^https?:\/\/[^\s]+$/.test(url)) throw new Error("서버 주소 없음");
       go.href = url;
       go.hidden = false;
-      msg.textContent = "앱으로 이동합니다. 열리지 않으면 아래 버튼을 눌러 주세요.";
+      msg.innerHTML = "앱으로 이동합니다.<br>열리지 않으면 아래 버튼을 눌러 주세요.";
       location.replace(url);
     } catch {
-      msg.textContent = "지금은 시연 서버가 꺼져 있어요. 잠시 후 다시 접속해 주세요.";
+      msg.innerHTML = "지금은 시연 서버가 꺼져 있어요.<br>잠시 후 다시 접속해 주세요.";
       go.hidden = false;
       go.textContent = "다시 시도";
       go.href = location.pathname;

@@ -1,0 +1,59 @@
+<!doctype html>
+<!--
+  Before you Bite 시연용 이동 페이지 (GitHub Pages: https://seohee363.github.io/beforeyoubite/)
+  인쇄한 QR 은 이 고정 주소를 가리키고, 이 페이지가 url.txt 에 적힌 그날의 서버 주소로 넘겨 준다
+  url.txt 는 시연 PC 의 start-demo.ps1 이 터널을 열 때마다 바꿔 올린다 (비어 있으면 "서버 꺼짐")
+  url.txt 를 ?t=시각 으로 불러 GitHub Pages 캐시(10분)를 피한다
+-->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Before you Bite</title>
+<style>
+  :root { --bg: #f9fafb; --fg: #111827; --muted: #6b7280; --accent: #059669; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #111827; --fg: #f9fafb; --muted: #9ca3af; --accent: #10b981; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+         padding: 0 16px; background: var(--bg); color: var(--fg); text-align: center;
+         font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+  .logo { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 14px;
+          background: linear-gradient(135deg, #10b981, #3b82f6); }
+  h1 { margin: 0 0 8px; font-size: 22px; }
+  p { margin: 0 0 20px; color: var(--muted); line-height: 1.5; }
+  .btn { display: inline-block; padding: 12px 22px; border-radius: 10px; background: var(--accent);
+         color: #fff; font-weight: 600; text-decoration: none; }
+  [hidden] { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <div class="logo" aria-hidden="true"></div>
+  <h1>Before you Bite</h1>
+  <p id="msg">앱으로 연결하는 중…</p>
+  <a id="go" class="btn" href="./" hidden>앱 열기</a>
+  <noscript><p>자바스크립트를 켜야 앱으로 이동할 수 있어요.</p></noscript>
+</main>
+<script>
+  (async () => {
+    const msg = document.getElementById("msg");
+    const go = document.getElementById("go");
+    try {
+      const res = await fetch("url.txt?t=" + Date.now(), { cache: "no-store" });
+      const url = res.ok ? (await res.text()).trim().split(/\s+/)[0] : "";
+      if (!/^https?:\/\/[^\s]+$/.test(url)) throw new Error("서버 주소 없음");
+      go.href = url;
+      go.hidden = false;
+      msg.textContent = "앱으로 이동합니다. 열리지 않으면 아래 버튼을 눌러 주세요.";
+      location.replace(url);
+    } catch {
+      msg.textContent = "지금은 시연 서버가 꺼져 있어요. 잠시 후 다시 접속해 주세요.";
+      go.hidden = false;
+      go.textContent = "다시 시도";
+      go.href = location.pathname;
+    }
+  })();
+</script>
+</body>
+</html>
